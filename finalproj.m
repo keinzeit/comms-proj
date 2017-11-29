@@ -136,8 +136,15 @@ bs = de2bi(bs,qbits); % convert quantized values into 8-bit numbers. right MSB; 
 
 %% Modulation
 K = 32;
-t = linspace(0,32,32)
+t = linspace(0,32,32);
 Am = bi2de(bs(1,1:4))
-pulse = Am*sin(pi*t/K)
+pulse = Am*sin(pi*t/K);
 plot(t,pulse)
+
+bs(bs==1)=1;
+bs(bs==0)=-1;
+bs
+
+
+
 
