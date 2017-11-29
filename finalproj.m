@@ -86,8 +86,6 @@ Z = im2double(Z);                       % Convert image to type double
 m = size(Z,1);                          % Get number of rows
 n = size(Z,2);                          % number of columns
 
-whos Z
-
 %fun = @(block_struct)(block_struct.data);
 fun = @dct2;
 dctZ= blkproc(Z,[8,8],fun);             %Perform DCT on image
@@ -96,11 +94,8 @@ figure(2)
 imshow(dctZ)                            %Display the DCT of image
 
 % scale the DCT image matrix from 0-1
-
 scaledZ = (dctZ-min(dctZ(:)))./(max(dctZ(:)-min(dctZ(:))));
-
 min(scaledZ(:));                        % the min is 0
-
 max(scaledZ(:));                        % the max 1
 
 Z3d = reshape(scaledZ, [8,8,(m*n)/64]); % Create 3D array
@@ -129,20 +124,20 @@ end
 [M,N,B] = size(Zt);
  
 len = M*N;
-bs = zeros(M*N*B,1);                         %preallocate memory for vector
+bs = zeros(M*N*B,1); %preallocate memory for vector
 for i = 1:B
-    bs_temp = reshape(Zt(:,:,i),len,1);      % reshape B MxN dct blocks into a long column vector
+    bs_temp = reshape(Zt(:,:,i),len,1); % reshape B MxN dct blocks into a long column vector
     start = len*(i-1)+1;
     stop  = len*i;
-    bs(start:stop) = bs_temp;                % put values into correct location in bs
+    bs(start:stop) = bs_temp;  % put values into correct location in bs
 end
  
-bs = de2bi(bs,qbits);                            % convert quantized values into 8-bit numbers. right MSB; use correct flag for left MSB
-
-whos bs; % Jon's!
+bs = de2bi(bs,qbits); % convert quantized values into 8-bit numbers. right MSB; use correct flag for left MSB
 
 %% Modulation
-
-% I dont know what i'm doing
-% Me neither
+K = 32;
+t = linspace(0,32,32)
+Am = bi2de(bs(1,1:4))
+pulse = Am*sin(pi*t/K)
+plot(t,pulse)
 
