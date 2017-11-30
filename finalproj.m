@@ -18,7 +18,7 @@
 %% Image Pre-processing
 I0 = imread('file.jpeg');               % Import Image
 I0 = imrotate(I0, 270);                 % Rotate Image
-I = I0(801:2848,401:2448,:);                % Crop Image
+I = I0(801:864,401:464,:);            % Crop Image
 I = imresize(I, 0.25);                  % Resize image
 
 figure(1)
@@ -116,7 +116,7 @@ if PAM_level == 2
     Am(Am==0) = -1;
 end
 
-modBsSP = zeros(1,size(Am,1)*size(Am,2)*T+1);
+modBsSP = zeros(1,size(Am,1)*size(Am,2)*T+1); 
 tModBsSP = (1:length(modBsSP))/T;
 for i = 1:M*N*B*qbits
     j = fix((i-1)/pulsesPerRow)+1;
@@ -135,4 +135,34 @@ ylabel('Amplitude')
 
 
 modStreamSRRC = zeros(1,(size(Am,1)*size(Am,2)+2*K-1)*T);
+
+
+whos modBsSP
+
+%% Channel
+
+delay = zeros(1, 31);
+h = [1 delay 1/2 delay 3/4 delay -2/7];
+
+impulse(h,97 )
+
+y = conv(modBsSP, h);
+
+freqz(h)
+
+stem(h)
+
+noise = rand(1,length(y));
+
+yn = y+ noise;
+
+
+%% Matched filter
+
+g = sPulse;
+
+
+
+
+
 
