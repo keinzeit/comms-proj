@@ -144,7 +144,6 @@ whos modBsSP
 delay = zeros(1, 31);
 h = [1 delay 1/2 delay 3/4 delay -2/7];
 
-impulse(h,97 )
 
 y = conv(modBsSP, h);
 
