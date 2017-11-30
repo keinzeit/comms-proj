@@ -21,8 +21,8 @@ I0 = imrotate(I0, 270);                 % Rotate Image
 I = I0(801:2848,401:2448,:);                % Crop Image
 I = imresize(I, 0.25);                  % Resize image
 
-figure(1)
-imshow(I)                               % Display original image
+% figure(1)
+% imshow(I)                               % Display original image
 
 Z = rgb2gray(I);                        % Convert to grayscale
 Z = im2double(Z);                       % Convert image to type double
@@ -102,30 +102,29 @@ PAM_level = 2;
 R = log2(PAM_level); % number of bits used to change amplitude of pulse shape
 pulsesPerRow = qbits/R; % number of pulses made from a row of Am
 
+% % calculate amplitudes for all pulses
+% Am = zeros(M*N*B,R);
+% for i = 1:M*N*B
+%     for j = 1:pulsesPerRow % perform 16-PAM
+%         head = 1+log2(PAM_level)*(j-1);
+%         tail = log2(PAM_level)*j;
+%         Am(i,j) = bi2de(bs(i,head:tail));
+%     end
+% end
+% if PAM_level == 2
+%     Am(Am==0) = -1;
+% end
 
-% calculate amplitudes for all pulses
-Am = zeros(M*N*B,R);
-for i = 1:M*N*B
-    for j = 1:pulsesPerRow % perform 16-PAM
-        head = 1+log2(PAM_level)*(j-1);
-        tail = log2(PAM_level)*j;
-        Am(i,j) = bi2de(bs(i,head:tail));
-    end
-end
-if PAM_level == 2
-    Am(Am==0) = -1;
-end
-
-modBsSP = zeros(1,size(Am,1)*size(Am,2)*T+1);
-tModBsSP = (1:length(modBsSP))/T;
-for i = 1:M*N*B*qbits
-    j = fix((i-1)/pulsesPerRow)+1;
-    k = mod(i-1,pulsesPerRow)+1;
-    start = (i-1)*T+1;
-    stop  = i*T+1;
-    modBsSP(start:stop) = Am(j,k)*sPulse; %consider removing modBsSP for half-sine pulse
-    
-end
+% % modulate bk's with half-sine pulses
+% modBsSP = zeros(1,size(Am,1)*size(Am,2)*T+1);
+% tModBsSP = (1:length(modBsSP))/T;
+% for i = 1:M*N*B*qbits
+%     j = fix((i-1)/pulsesPerRow)+1;
+%     k = mod(i-1,pulsesPerRow)+1;
+%     start = (i-1)*T+1;
+%     stop  = i*T+1;
+%     modBsSP(start:stop) = Am(j,k)*sPulse; %consider removing modBsSP for half-sine pulse  
+% end
 % proof-of-concept: plot the first 16 symbols
 figure(11)
 plot(tModBsSP(1:T*16),modBsSP(1:T*16))
@@ -133,6 +132,14 @@ title('First 16 Symbols of Modulation w/ Half-Sine Pulse')
 xlabel('Time (s)')
 ylabel('Amplitude')
 
-
-modStreamSRRC = zeros(1,(size(Am,1)*size(Am,2)+2*K-1)*T);
+% modulate bk's with srrc pulses
+modStreamSRRC = zeros(1,(size(Am,1)*size(Am,2)+2*K-1)*T+1);
+% tModBsSP = (1:length(modStreamSRRC))/T;
+for i = 1:M*N*B*qbits
+    j = fix((i-1)/pulsesPerRow)+1;
+    k = mod(i-1,pulsesPerRow)+1;
+    start = (i-1)*T+1;
+    stop  = (i-1)*T+2*K*T+1;
+    modStreamSRRC(start:stop) = modStreamSRRC(start:stop) + Am(j,k)*srrcPulse; %consider removing modBsSP for half-sine pulse  
+end
 
