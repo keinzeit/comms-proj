@@ -77,7 +77,7 @@ I = imread('file.jpeg');                % Import Image
 I = imrotate(I, 270);                   % Rotate Image
 I = imresize(I, 0.25);                  % Resize image
 
-figure(1)
+%figure(1)
 %imshow(I)                               % Display original image
 
 Z = rgb2gray(I);                        % Convert to grayscale
@@ -136,36 +136,45 @@ bs = de2bi(bs,qbits); % convert quantized values into 8-bit numbers. right MSB; 
 
 %% Modulation
 T = 32; % number of samples per pulse
-K = 4;
-t1 = linspace(0,T); 
-t2 = linspace(-K*T,K*T,2*K*(T)+1);
-sPulse = sin(pi*t1/T); % half-sine pulse
-A = norm(sPulse,2)
-a = 0.5; % roll-off factor
-srrcPulse = A*rcosdesign(a,K,2*T,'sqrt')
+K = 4; % number of symbols overlap per pulse
 
-R = qbits/4; % number of quantization bits
+% half-sine pulse
+t1 = linspace(0,T); 
+sPulse = sin(pi*t1/T); 
+
+% SRRC Pulse
+A = norm(sPulse,2);
+a = 0.5; % roll-off factor
+t2 = linspace(-K*T,K*T,2*K*(T)+1);
+srrcPulse = A*rcosdesign(a,K,2*T,'sqrt');
+
+PAM_level = 2;
+R = qbits/(qbits/log2(PAM_level)); % number of quantization bits
 
 % calculate amplitudes for all pulses
-% Am = zeros(M*N*B,R);
-% for i = 1:M*N*B
-%     for j = 1:R % perform 16-PAM
-%         head = 1+4*(j-1);
-%         tail = 4*j;
-%         Am(i,j) = bi2de(bs(i,head:tail));
-%     end
-% end
+Am = zeros(M*N*B,R);
+for i = 1:M*N*B
+    for j = 1:R % perform 16-PAM
+        head = 1+4*(j-1);
+        tail = 4*j;
+        Am(i,j) = bi2de(bs(i,head:tail));
+    end
+end
 sp1 = Am(1,1)*sPulse; srrcp1 = Am(1,1)*srrcPulse;
 plot(t1,sp1,t2,srrcp1)
 
-TEST = zeros(1,64*5+1);
-TEST(1:257) = TEST(1:257) + Am(1,1)*srrcPulse;
-TEST(65:321) = TEST(65:321) + Am(1,2)*srrcPulse
-plot(TEST)
-hold on
-plot(1:257,Am(1,1)*srrcPulse)
-hold on
-plot(65:321,Am(1,2)*srrcPulse)
+
+
+
+
+% TEST = zeros(1,64*5+1);
+% TEST(1:257) = TEST(1:257) + Am(1,1)*srrcPulse;
+% TEST(65:321) = TEST(65:321) + Am(1,2)*srrcPulse
+% plot(TEST)
+% hold on
+% plot(1:257,Am(1,1)*srrcPulse)
+% hold on
+% plot(65:321,Am(1,2)*srrcPulse)
 
 
 
