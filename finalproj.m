@@ -192,7 +192,7 @@ plot(ysrrc)
 %% Noise 
 noise = 0.1;
 sineNoise = sigma*randn(1,length(ysine));       %noise
-srrcNoisw = sigma*randn(1, length(ysrrc));      
+srrcNoise = sigma*randn(1, length(ysrrc));      
 
 ysn = ysine+ sineNoise;                         % signals with noise
 ysrrcn = ysrrc+ srrcNoise;
@@ -206,8 +206,10 @@ gSRRC = srrcPulse;                                  %same for srrc pulce
 zSine = conv(gSine, ysn);                           %outputs of matched filter
 zSRRC = conv(gSRRC, ysrrcn);
 
+freqz(gSine)
+freqz(gSRRC)
 
-
+eyediagram(zSRRC,32)
 
 
 

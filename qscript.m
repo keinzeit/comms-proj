@@ -60,3 +60,9 @@ plot(ysrrc)
 
 figure(119)
 plot(ysn)
+
+figure(120)
+eyediagram(ysn,32)
+
+figure(121)
+eyediagram(ysrrcn,32)
