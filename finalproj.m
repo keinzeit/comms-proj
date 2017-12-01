@@ -171,30 +171,31 @@ end
 whos modBsSP
 
 %% Channel
-delay = zeros(1, 31);
-h = [1 delay 1/2 delay 3/4 delay -2/7];
+delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
+h = [1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
+
 figure
 freqz(h)
 
 figure
 stem(h)
 
-ysine = conv(modBsSP, h);
+ysine = conv(modBsSP, h);                       %channel output 
 
-ysrrc = conv(modStreamSRRC, h);
+ysrrc = conv(modStreamSRRC, h);                 %channel output
 
 %% Noise 
 sigma = 0.1;
-sineNoise = sigma*randn(1,length(ysine));
-srrcNoisw = sigma*randn(1, length(ysrrc));
+sineNoise = sigma*randn(1,length(ysine));       %noise
+srrcNoisw = sigma*randn(1, length(ysrrc));      
 
-ysn = ysine+ sineNoise;
+ysn = ysine+ sineNoise;                         % signals with noise
 ysrrcn = ysrrc+ srrcNoise;
 
 
 %% Matched filter
 
-tg = 0:1:1/sampleFreq:T-1/sampleFreq;               %new time vector from 0 - (T-1 sample)
+tg = 0:1:t1:T-t1;                                   %new time vector from 0 - (T-1 sample)
 
 
 gSine = sin(pi*tg/T);                               %Matched filter from 0 - (T-1 sample)
