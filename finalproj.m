@@ -197,11 +197,8 @@ srrcNoisw = sigma*randn(1, length(ysrrc));
 ysn = ysine+ sineNoise;                         % signals with noise
 ysrrcn = ysrrc+ srrcNoise;
 
-
 %% Matched filter
-
 tg = 0:1:T-1;                                   %new time vector from 0 - (T-1 sample)
-
 
 gSine = sin(pi*tg/T);                               %Matched filter from 0 - (T-1 sample)
 gSRRC = srrcPulse;                                  %same for srrc pulce
