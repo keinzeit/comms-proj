@@ -43,11 +43,20 @@ figure(116)
 stem(h)
 axis([-10 105 -.5 1.5])
 
-ysine = conv(modBsSP(1:T*10), h);    %channel output 
+ysine = conv(modBsSP(1:T*10), h);                %channel output 
 figure(117)
 plot(ysine)
 
 
-ysrrc = conv(modStreamSRRC, h);                 %channel output
+ysrrc = conv(modStreamSRRC(1:T*10), h);%channel output
+
+eyediagram(ysine,32)
+
+eyediagram(ysrrc,32)
+
+figure(118)
+plot(ysrrc)
 
 
+figure(119)
+plot(ysn)
