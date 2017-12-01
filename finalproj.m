@@ -18,7 +18,7 @@
 %% Image Pre-processing
 I0 = imread('file.jpeg');               % Import Image
 I0 = imrotate(I0, 270);                 % Rotate Image
-I = I0(801:2848,401:2448,:);                % Crop Image
+I = I0(801:864,401:464,:);            % Crop Image
 I = imresize(I, 0.25);                  % Resize image
 
 % figure(1)
@@ -125,6 +125,31 @@ pulsesPerRow = qbits/R; % number of pulses made from a row of Am
 %     stop  = i*T+1;
 %     modBsSP(start:stop) = Am(j,k)*sPulse; %consider removing modBsSP for half-sine pulse  
 % end
+
+% calculate amplitudes for all pulses
+Am = zeros(M*N*B,R);
+for i = 1:M*N*B
+    for j = 1:pulsesPerRow % perform 16-PAM
+        head = 1+log2(PAM_level)*(j-1);
+        tail = log2(PAM_level)*j;
+        Am(i,j) = bi2de(bs(i,head:tail));
+    end
+end
+if PAM_level == 2
+    Am(Am==0) = -1;
+end
+
+modBsSP = zeros(1,size(Am,1)*size(Am,2)*T+1); 
+tModBsSP = (1:length(modBsSP))/T;
+for i = 1:M*N*B*qbits
+    j = fix((i-1)/pulsesPerRow)+1;
+    k = mod(i-1,pulsesPerRow)+1;
+    start = (i-1)*T+1;
+    stop  = i*T+1;
+    modBsSP(start:stop) = Am(j,k)*sPulse; %consider removing modBsSP for half-sine pulse
+    
+end
+
 % proof-of-concept: plot the first 16 symbols
 figure(11)
 plot(tModBsSP(1:T*16),modBsSP(1:T*16))
@@ -142,4 +167,26 @@ for i = 1:M*N*B*qbits
     stop  = (i-1)*T+2*K*T+1;
     modStreamSRRC(start:stop) = modStreamSRRC(start:stop) + Am(j,k)*srrcPulse; %consider removing modBsSP for half-sine pulse  
 end
+
+whos modBsSP
+
+%% Channel
+delay = zeros(1, 31);
+h = [1 delay 1/2 delay 3/4 delay -2/7];
+
+y = conv(modBsSP, h);
+
+freqz(h)
+stem(h)
+
+noise = rand(1,length(y));
+yn = y+ noise;
+
+%% Matched filter
+g = sPulse;
+
+
+
+
+
 
