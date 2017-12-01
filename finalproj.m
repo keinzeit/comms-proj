@@ -173,17 +173,38 @@ whos modBsSP
 %% Channel
 delay = zeros(1, 31);
 h = [1 delay 1/2 delay 3/4 delay -2/7];
-
-y = conv(modBsSP, h);
-
+figure
 freqz(h)
+
+figure
 stem(h)
 
-noise = rand(1,length(y));
-yn = y+ noise;
+ysine = conv(modBsSP, h);
+
+ysrrc = conv(modStreamSRRC, h);
+
+%% Noise 
+sigma = 0.1;
+sineNoise = sigma*randn(1,length(ysine));
+srrcNoisw = sigma*randn(1, length(ysrrc));
+
+ysn = ysine+ sineNoise;
+ysrrcn = ysrrc+ srrcNoise;
+
 
 %% Matched filter
-g = sPulse;
+
+tg = 0:1:1/sampleFreq:T-1/sampleFreq;               %new time vector from 0 - (T-1 sample)
+
+
+gSine = sin(pi*tg/T);                               %Matched filter from 0 - (T-1 sample)
+gSRRC = srrcPulse;                                  %same for srrc pulce
+
+zSine = conv(gSine, ysn);                           %outputs of matched filter
+zSRRC = conv(gSRRC, ysrrcn);
+
+
+
 
 
 
