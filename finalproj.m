@@ -184,8 +184,13 @@ ysine = conv(modBsSP, h);                       %channel output
 
 ysrrc = conv(modStreamSRRC, h);                 %channel output
 
+figure
+plot(ysine)
+figure
+plot(ysrrc)
+
 %% Noise 
-sigma = 0.1;
+noise = 0.1;
 sineNoise = sigma*randn(1,length(ysine));       %noise
 srrcNoisw = sigma*randn(1, length(ysrrc));      
 
@@ -195,7 +200,7 @@ ysrrcn = ysrrc+ srrcNoise;
 
 %% Matched filter
 
-tg = 0:1:t1:T-t1;                                   %new time vector from 0 - (T-1 sample)
+tg = 0:1:T-1;                                   %new time vector from 0 - (T-1 sample)
 
 
 gSine = sin(pi*tg/T);                               %Matched filter from 0 - (T-1 sample)
