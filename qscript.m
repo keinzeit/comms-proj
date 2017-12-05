@@ -31,7 +31,11 @@ xlabel('Time (s)')
 ylabel('Amplitude')
 
 figure(114)
+plot(
+
 freqz(tModBsSP)
+
+freqz(mod
 
 delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
 h = [1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
