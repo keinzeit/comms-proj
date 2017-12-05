@@ -9,7 +9,7 @@ sPulse = sin(pi*t1/T);
 
 figure(101); plot(t11,sPulse)
 title('half-sine pulse'); xlabel('Time (s)')
-figure(102); freqz(sPulse)
+figure(102); freqz(sPulse); title('half-sine pulse')
 
 % srrc pulse
 A = norm(sPulse,2);
@@ -18,5 +18,8 @@ t2 = linspace(-K*T,K*T,2*K*T+1);
 t21 = linspace(-K,K,2*K*T+1);
 srrcPulse = A*rcosdesign(a,K,2*T,'sqrt'); % energy of rcosdesign is one, just multiply by energy of half-sine pulse
 
-figure(111); plot(t21,srrcPulse)
-figure(112); freqz(srrcPulse)
+figure(111); plot(t21,srrcPulse); title('srrc pulse')
+figure(112); freqz(srrcPulse); title('srrc pulse')
+
+% modulated signal
+figure(121); freqz(modStreamSRRC), title('srrc pulse')

@@ -48,12 +48,12 @@ Z3d = reshape(scaledZ, [8,8,(m*n)/64]); % Create 3D array
 
 %% Quantizer
 qbits = 16;                     % Number of Quantizer bits
-
-if qbits == 8
-   Zt=im2uint8(Z3d);                    % Quantize to 2^8 levels
-elseif qbits == 16
-   Zt=im2uint16(Z3d);                   % Quantize to 2^16 levels
-end       
+Zt = quantizer(Z3d,16);
+% if qbits == 8
+%    Zt=im2uint8(Z3d);                    % Quantize to 2^8 levels
+% elseif qbits == 16
+%    Zt=im2uint16(Z3d);                   % Quantize to 2^16 levels
+% end       
 
 %% Conversion to bit-stream:
 % we transmit N DCT blocks at a time
@@ -86,7 +86,7 @@ bs = de2bi(bsd,qbits); % convert quantized values into 8-bit numbers. right MSB;
 
 %% Modulation
 T = 32; % technically the bit duration, but for now it is number of samples per bit duration
-K = 4; % half the number of bit durations per SRRC pulse
+K = 6; % half the number of bit durations per SRRC pulse
 
 % half-sine pulse
 t1 = linspace(0,T,T+1); % I have pulses include the first value of the next pulse
@@ -94,7 +94,7 @@ sPulse = sin(pi*t1/T);
 
 % SRRC Pulse
 A = norm(sPulse,2);
-a = 0.5; % roll-off factor
+a = 0.75; % roll-off factor
 t2 = linspace(-K*T,K*T,2*K*T+1);
 srrcPulse = A*rcosdesign(a,K,2*T,'sqrt'); % energy of rcosdesign is one, just multiply by energy of half-sine pulse
 
@@ -152,14 +152,14 @@ end
 
 % proof-of-concept: plot the first 16 symbols
 figure(11)
-plot(tModBsSP(1:T*16),modBsSP(1:T*16))
-title('First 16 Symbols of Modulation w/ Half-Sine Pulse')
+plot(tModBsSP(1:T*10),modBsSP(1:T*10))
+title('First 10 Symbols of Modulation w/ Half-Sine Pulse')
 xlabel('Time (s)')
 ylabel('Amplitude')
 
 % modulate bk's with srrc pulses
 modStreamSRRC = zeros(1,(size(Am,1)*size(Am,2)+2*K-1)*T+1);
-% tModBsSP = (1:length(modStreamSRRC))/T;
+tModStreamSRRC = (1:length(modStreamSRRC))/T;
 for i = 1:M*N*B*qbits
     j = fix((i-1)/pulsesPerRow)+1;
     k = mod(i-1,pulsesPerRow)+1;
@@ -168,7 +168,12 @@ for i = 1:M*N*B*qbits
     modStreamSRRC(start:stop) = modStreamSRRC(start:stop) + Am(j,k)*srrcPulse; %consider removing modBsSP for half-sine pulse  
 end
 
-whos modBsSP
+% proof-of-concept: plot the first 16 symbols
+figure(12)
+plot(tModStreamSRRC(1:T*10),modStreamSRRC(1:T*10))
+title('First 10 Symbols of Modulation w/ SRRC Pulse')
+xlabel('Time (s)')
+ylabel('Amplitude')
 
 %% Channel
 delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
@@ -205,13 +210,5 @@ gSRRC = srrcPulse;                                  %same for srrc pulce
 
 zSine = conv(gSine, ysn);                           %outputs of matched filter
 zSRRC = conv(gSRRC, ysrrcn);
-
-
-
-
-
-
-
-
 
 
