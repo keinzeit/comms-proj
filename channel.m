@@ -1,37 +1,28 @@
-function [ySRRC ySine] = Channel(modBsSRRC, modBsSP, noise)
+function [SRRC_Channel_out HS_Channel_out Noisy_HS Noisy_SRRC] = Channel(modStreamSRRC, modBsSP, noise)
 
-%Function imports the modulated bit stream dna passes them through the
-%channel for transmission.  The channel is also created in this function
-%and noise is added to the signals at the end.  This function also plots
-%eye diagrams of both signals before and after the noise is added
+%Function imports the modulated bit stream and passes them through the
+%channel for transmission.  The cannel is created, plotted, and modulated
+%signals are passed through.  Noise is also added in this function
 
-%inputs modBsSRRC and modBsSP
-%outputs ySRRC and ySine with added noise
+%inputs modStreamSRRC modBsSP, noise
+%outputs HS_Channel_out, SRRC_Channel_out, Noisy_HS, Noisy_SRRC
 
 delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
 h = [1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
 
-figure
-freqz(h)                                        %Plots frequency response of h
+%Plot Impulse and Frequency Response of Channel
+figure(101); freqz(h); suptitle('Frequency Response of the Channel')                                       
+figure(102); stem(h); suptitle('Impulse Response of Channel')   
 
-figure
-stem(h)                                         %plots step response of h
-
-ysine = conv(modBsSP, h);                       %channel output 
-
-ysrrc = conv(modStreamSRRC, h);                 %channel output
-
-figure
-plot(ysine)
-
-figure
-plot(ysrrc)
+%Create Outputs by Convolving Signals with the Channel
+HS_Channel_out = conv(modBsSP, h);                           
+SRRC_Channel_out = conv(modStreamSRRC, h);   
 
 %% Noise 
 sigma = sqrt(noise);
 
-sineNoise = sigma*randn(1,length(ysine));       %noise
-srrcNoise = sigma*randn(1, length(ysrrc));      
+sineNoise = sigma*randn(1,length(HS_Channel_out));       %noise
+srrcNoise = sigma*randn(1, length(SRRC_Channel_out));      
 
-ysn = ysine+ sineNoise;                         % signals with noise
-ysrrcn = ysrrc+ srrcNoise;
+Noisy_HS = HS_Channel_out+ sineNoise;                    %signals with noise
+Noisy_SRRC = SRRC_Channel_out+ srrcNoise;
