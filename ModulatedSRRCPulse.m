@@ -1,5 +1,4 @@
 function [modBsSRRC modStreamSRRC] = ModulatedSRRCPulse(bitStream, alpha, T, K, Am, M, N, B, qBits, PAM_level)
-
 % Function inputs the bitStream and modulates the bit stream using a Square
 % Root Raised Cosine shaping filter.  The function creates the SRRC pulse
 % and then modulates the bit stream

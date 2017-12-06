@@ -1,8 +1,7 @@
 function [bitStream M N B] = Convert_to_Bitstream(qBits, Zq)
-
-%Function takes the 3d array of quantized matrices and converts them into a
-%binary single stream of bits.  The row length of this bit stream is
-%dependent on the number of quantization levels chosen
+% Function takes the 3d array of quantized matrices and converts them into a
+% binary single stream of bits.  The row length of this bit stream is
+% dependent on the number of quantization levels chosen
 
 % inputs Zq
 % outputs bitStream
@@ -19,4 +18,6 @@ for i = 1:B
 end
  
 bitStream = de2bi(bsd,qBits);               % convert quantized values into q-bit numbers. right MSB; use correct flag for left MS
+
+return
 
