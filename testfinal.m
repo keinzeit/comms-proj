@@ -1,4 +1,22 @@
 %% final test
+% Jon Manninen, Kenny Yau
+
+%%%
+% This project is a simulation of the model of communication systems for
+% images, such as that used for digital HDTV. It consists of a number of
+% parts:
+%     - Image pre-processing
+%     - Conversion to bit-stream
+%     - Modulation
+%     - Channel Effects
+%     - Noise
+%     - Matched Filter
+%     - Receiver Equalization
+%     - Sampling and Detection
+%     - Conversion to Image
+%     - Image post-processing
+
+%% Image Pre-processing
 I0 = imread('file.jpeg');                   % Import Image
 I0 = imrotate(I0, 270);                     % Rotate Image
 [Zt,dctZ,I] = ImPreProc(I0);                % Send image for processing
@@ -6,9 +24,9 @@ I0 = imrotate(I0, 270);                     % Rotate Image
 figure(1); imshow(I);suptitle('Original Image')                       % Show Processed Image        
 figure(2); imshow(dctZ); suptitle('DCT of Image')                    % Show DCT of Image
 
+%% Conversion to Bit Stream
 qBits = 16;                                 % Quantization bits
-Zq = quantizer(qBits,Zt);                  % Send DCT image to be quantized
-
+Zq = quantizer(qBits,Zt);                   % Send DCT image to be quantized
 
 % Create Bit Stream out of Quantized Data
 [bitStream,M,N,B] = Convert_to_Bitstream(qBits, Zq);
@@ -16,16 +34,15 @@ Zq = quantizer(qBits,Zt);                  % Send DCT image to be quantized
 T = 32;                                     % Sampling Period
 PAM_level = 2;                              % PAM levels
 
+%% Modulation 
 % Modulate Bit Stream using Half Sine Pulses
 [modBsSP,sPulse,Am] = ModulatedSinePulse(bitStream, T, qBits, PAM_level, M, N, B);
 
 
-
-alpha = 0.5;                                % Roll- Off Factor
-K = 4;
-
 % Modulate Bit Stream using SRRC Pulses
-[SRRCPulse,modStreamSRRC] = ModulatedSRRCPulse(bitStream, alpha, T, K, Am, M, N, B, qBits, PAM_level);
+alpha = 0.5;                                % Roll- Off Factor
+K = 4;                                      % 1/2 # of bit durations the SRRC pulse lasts
+[SRRCPulse,modStreamSRRC] = ModulatedSRRCPulse(bitStream,alpha,T,K,Am,M,N,B,qBits,PAM_level);
 
 % pulse time and frequency plots
 figure(3); plot(sPulse); suptitle('Half-Sine Pulse');                     %Plots single Half-sine pulse
@@ -41,26 +58,29 @@ figure(10); freqz(modStreamSRRC); suptitle('Frequency Response of SRRC Pulse')
 eyediagram(modBsSP, 32 , 1, 16); suptitle('Eye Diagram of Modulated Half-Sine Pulse')
 eyediagram(modStreamSRRC, 32, 1); suptitle('Eye Diagram of Modulated SRRC Pulse')
 
-noise = 0.1;                                %noise to be added after channel
+%% Channel Effects
+noise = 0.1;                                % noise to be added after channel (power?)
 
 [SRRC_Channel_out,HS_Channel_out,Noisy_HS,Noisy_SRRC] = channel(modStreamSRRC, modBsSP, noise);
 
-%eye diagrams of Modulated signals at the output of the Channel
+% eye diagrams of Modulated signals at the output of the Channel
 eyediagram(SRRC_Channel_out, 32);suptitle('Eye Diagram of SRRC Signal after Channel')
 eyediagram(HS_Channel_out, 32, 1, 16); suptitle('Eye Diagram of HS Signal after Channel')
 
-%eye diagrams of Modulated signals with noise out of the Channel
+% eye diagrams of Modulated signals with noise out of the Channel
 eyediagram(Noisy_HS, 32, 1, 16); suptitle('Eye Diagram of Noisey HS Signal')
 eyediagram(Noisy_SRRC, 32); suptitle('Eye Diagram of Noisey SRRC Signal')
 
-%Pass Noisy Signals through the Matched Filter
+%% Matched Filter
+% Pass Noisy Signals through the Matched Filter
 [HS_MF_Out,SRRC_MF_Out] = Matched_Filter(Noisy_HS, Noisy_SRRC, SRRCPulse, T);
 
 eyediagram(HS_MF_Out, 32); suptitle('Eye Diagram of HS Signal after Matched Filter')
 eyediagram(SRRC_MF_Out, 32); suptitle('Eye Diagram of SRRC Signal after Matched Filter')
 
-%Pass Signal Output from the Matched Filter through the Zero-Forcing
-%Equalizer
+%% Equalizer
+% Pass Signal Output from the Matched Filter through the Zero-Forcing
+% Equalizer
 [ZF_Equalizer_Out_HS,ZF_Equalizer_Out_SRRC] = ZF_equalizer(HS_MF_Out, SRRC_MF_Out);
 
 eyediagram(ZF_Equalizer_Out_HS, 32);
