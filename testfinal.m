@@ -59,7 +59,7 @@ eyediagram(modBsSP, 32 , 1, 16); suptitle('Eye Diagram of Modulated Half-Sine Pu
 eyediagram(modStreamSRRC, 32, 1); suptitle('Eye Diagram of Modulated SRRC Pulse')
 
 %% Channel Effects
-noise = 0.1;                                % noise to be added after channel (power?)
+noise = 0.05;                                % noise to be added after channel (power?)
 
 [SRRC_Channel_out,HS_Channel_out,Noisy_HS,Noisy_SRRC] = channel(modStreamSRRC, modBsSP, noise);
 
@@ -83,5 +83,5 @@ eyediagram(SRRC_MF_Out, 32); suptitle('Eye Diagram of SRRC Signal after Matched 
 % Equalizer
 [ZF_Equalizer_Out_HS,ZF_Equalizer_Out_SRRC] = ZF_equalizer(HS_MF_Out, SRRC_MF_Out);
 
-eyediagram(ZF_Equalizer_Out_HS, 32);
-eyediagram(ZF_Equalizer_Out_SRRC, 32);
+eyediagram(ZF_Equalizer_Out_HS, 32); suptitle('Eye Diagram Output of ZF Equalizer HS')
+eyediagram(ZF_Equalizer_Out_SRRC, 32); suptitle('Eye Diagram Output of ZF Equalizer SRRC')
