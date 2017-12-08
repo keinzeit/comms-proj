@@ -6,7 +6,7 @@ function [Zt dctZ I] = ImPreProc(I0)
 % no inputs
 % outputs Zt, a 3d array of 8x8 matrices
 
-I = I0(801:864,401:464,:);              % Crop Image
+I = I0(801:816,401:416,:);              % Crop Image
 I = imresize(I, 0.5);                  % Resize image
 
 %figure(1)
