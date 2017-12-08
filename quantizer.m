@@ -1,4 +1,4 @@
-function [Zq] = quantizer(qBits, Zt)
+function [Zq] = quantizer(qBits,Zt)
 % Function quantizes the 8x8xB matrix into 2^qbits levels.  quantizer is
 % pre-set to accept qbits = 8,16
 

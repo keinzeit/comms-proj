@@ -1,4 +1,4 @@
-function [Zt dctZ I] = ImPreProc(I0)
+function [Zt,dctZ,I] = ImPreProc(I0)
 %function imports the image to be used, processes the image by converting
 %to a matrix and scaling the data between 0 and 1 for quantization.  The
 %output of this function is a 3d array of 8x8 binary matrices

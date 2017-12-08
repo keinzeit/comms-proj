@@ -1,4 +1,4 @@
-function [ZF_Equalizer_Out_HS ZF_Equalizer_Out_SRRC] = ZF_equalizer(HS_MF_Out, SRRC_MF_Out)
+function [ZF_Equalizer_Out_HS,ZF_Equalizer_Out_SRRC] = ZF_equalizer(HS_MF_Out, SRRC_MF_Out)
 
 %Function is a zero-forcing equalizer which undoes the effects of the
 %Channel.  The Equalizer compensates for channel distortion by inverting
@@ -20,8 +20,8 @@ h = [1 delay 1/2 delay 3/4 delay -2/7];         %Coefficients of the Channel
 %ZFE_HS = 1./Hf_HS;                              %Equalizer for HS signal
 %ZFE_SRRC = 1./Hf_SRRC;                          %Equalizer for SRRC signal
 
-%freqz(ZFE_HS);suptitle('Frequency Response of Zero Forcing Equalizer')
-%freqz(ZFE_SRRC);suptitle('Frequency Response of Zero Forcing Equalizer')
+%freqz(ZFE_HS);title('Frequency Response of Zero Forcing Equalizer')
+%freqz(ZFE_SRRC);title('Frequency Response of Zero Forcing Equalizer')
 
 %ZF_Equalizer_Out_HS = ifft(Hf_HS.*ZFE_HS);
 %ZF_Equalizer_Out_SRRC = ifft(Hf_SRRC.*ZFE_SRRC);
@@ -30,10 +30,10 @@ ZF_Equalizer_Out_HS = filter(1, h, HS_MF_Out);
 ZF_Equalizer_Out_SRRC = filter(1, h, SRRC_MF_Out);
 
 figure(114),stem(ZF_Equalizer_Out_HS);
-suptitle('Impulse Response of the Zero-Forcing Equalizer HS')
+title('Impulse Response of the Zero-Forcing Equalizer HS')
 
 figure(115),stem(ZF_Equalizer_Out_SRRC);
-suptitle('Impulse Response of the Zero-Forcing Equalizer SRRC')
+title('Impulse Response of the Zero-Forcing Equalizer SRRC')
 
 
 

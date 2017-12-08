@@ -1,4 +1,4 @@
-function [modBsSP sPulse Am] = ModulatedSinePulse(bitStream, T, qBits, PAM_level, M, N, B)
+function [modBsSP,sPulse,Am] = ModulatedSinePulse(bitStream,T,qBits,PAM_level,M,N,B)
 % Function inputs the bit stream, period, and PAM level.  Using this data, 
 % the function will create a Half-Sine pulse and modulate the bit stream with the pulse
 % to prepare thee data for the channel

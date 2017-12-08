@@ -1,4 +1,4 @@
-function [bitStream M N B] = Convert_to_Bitstream(qBits, Zq)
+function [bitStream,M,N,B] = Convert_to_Bitstream(qBits,Zq)
 % Function takes the 3d array of quantized matrices and converts them into a
 % binary single stream of bits.  The row length of this bit stream is
 % dependent on the number of quantization levels chosen
