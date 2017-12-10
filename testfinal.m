@@ -78,10 +78,37 @@ eyediagram(Noisy_SRRC, 32); title('Eye Diagram of Noisey SRRC Signal')
 eyediagram(HS_MF_Out, 32); title('Eye Diagram of HS Signal after Matched Filter')
 eyediagram(SRRC_MF_Out, 32); title('Eye Diagram of SRRC Signal after Matched Filter')
 
-%% Equalizer
+%% ZF Equalizer
 % Pass Signal Output from the Matched Filter through the Zero-Forcing
 % Equalizer
-[ZF_Equalizer_Out_HS,ZF_Equalizer_Out_SRRC] = ZF_equalizer(HS_MF_Out, SRRC_MF_Out);
+
+% note: ZF_equalizer is now written to filter output from any kind of
+% pulse-shaping function
+[ZF_Equalizer_Out_HS] = ZF_equalizer(HS_MF_Out);
+[ZF_Equalizer_Out_SRRC] = ZF_equalizer(SRRC_MF_Out);
 
 eyediagram(ZF_Equalizer_Out_HS, 32); title('Eye Diagram Output of ZF Equalizer HS')
 eyediagram(ZF_Equalizer_Out_SRRC, 32); title('Eye Diagram Output of ZF Equalizer SRRC')
+
+%% MMSE Equalizer
+% half-sine pulse
+% take FFT of channel impulse response
+delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
+channel_h = [1 1/2 3/4 -2/7]; %[1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
+channel_FFT = fft(channel_h,length(ZF_Equalizer_Out_HS));
+
+% create MMSE Equalizer
+Qmmse = (conj(channel_FFT)./((abs(channel_FFT)).^2)); %+2*noise));
+figure; freqz(ifft(Qmmse))
+title('Frequency Response of the MMSE Equalizer (no noise)')
+
+% create MMSE Equalizer including noise
+Qmmse = (conj(channel_FFT)./((abs(channel_FFT)).^2+2*noise));
+figure; freqz(ifft(Qmmse))
+title('Frequency Response of the MMSE Equalizer (with noise)')
+
+
+% channelOutputHSFFT = *ZF_Equalizer_Out_HS
+
+
+

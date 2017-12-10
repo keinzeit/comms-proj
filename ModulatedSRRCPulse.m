@@ -22,8 +22,6 @@ for i = 1:length(SRRCPulse)
 end
 
 
-
-
 modStreamSRRC = zeros(1,(size(Am,1)*size(Am,2)+2*K-1)*T+1);
 % tModBsSP = (1:length(modStreamSRRC))/T;
 for i = 1:M*N*B*qBits

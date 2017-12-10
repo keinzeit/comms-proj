@@ -31,5 +31,4 @@ dctZ= blkproc(Z,[8,8],fun);             %Perform DCT on image
 minZ = min(dctZ(:)); maxZ = max(dctZ(:));
 scaledZ = (dctZ-min(dctZ(:)))./(max(dctZ(:)-min(dctZ(:))));
 
-
 Zt = reshape(scaledZ, [8,8,(m*n)/64]);  % Outputs a 3D array of scaled data
