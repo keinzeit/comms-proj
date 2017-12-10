@@ -96,25 +96,36 @@ eyediagram(SRRC_ZF_Equalizer_Out, 32); title('Eye Diagram Output of ZF Equalizer
 %% MMSE Equalizer
 % half-sine pulse
 % take FFT of channel impulse response
-channel = [1 1/2 3/4 -2/7];
-channel_up = upsample(channel,T);
+channel_h = [1 1/2 3/4 -2/7];
+channel_up = upsample(channel_h,T);
 N = 2.^(nextpow2(length(HS_ZF_Equalizer_Out)));
 channel_FFT = fft(channel_h,N);
 
 % create MMSE Equalizer w/o noise
 Qmmse = qmmse(channel_up,N);
-Qmmse0 = qmmse(channel,N); % used to plot 1 period of the equalizer frequency response
+Qmmse0 = qmmse(channel_h,N); % used to plot 1 period of the equalizer frequency response
 figure; freqz(ifft(Qmmse0))
 title('Frequency Response of the MMSE Equalizer (no noise)')
 
-% create MMSE Equalizer including noise
-Qmmse = qmmse(channel_up,N,noise);
-Qmmse0 = qmmse(channel,N); % used to plot 1 period of the equalizer frequency response
-figure; freqz(ifft(Qmmse0)) 
-title('Frequency Response of the MMSE Equalizer (with noise=0.05)')
+% % create MMSE Equalizer including noise
+% Qmmse = qmmse(channel_up,N,noise);
+% Qmmse0 = qmmse(channel,N); % used to plot 1 period of the equalizer frequency response
+% figure; freqz(ifft(Qmmse0)) 
+% title('Frequency Response of the MMSE Equalizer (with noise=0.05)')
 
 % use the equalizer we just created and pass the matched filter output
 % through it
+
+MMSE_HS_Out = MMSE_Equalizer(Qmmse, HS_MF_Out);
+MMSE_SRRC_Out = MMSE_Equalizer(Qmmse, SRRC_MF_Out);
+
+
+%Eye diagrams of SRRC and HS from the MMSE Equalizer
+
+eyediagram(MMSE_HS_Out, 32); title('HS Output of MMSE Equalizer')
+eyediagram(MMSE_SRRC_Out, 32); title('SRRC Output of MMSE Equalizer')
+
+
 
 
 

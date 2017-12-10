@@ -16,8 +16,8 @@ h_up = upsample(h,32); % upsampling h inserts 32-1 zeros between each element in
 
 % find frequency response of the channel using freqz
 % Output only shows the response in the interval [0,pi] radial frequencies
-[H,w] = freqz(h,1024,'whole');
-
+[H,w] = freqz(h,65536,'whole');
+H = fftshift(H);
 Qzf = 1./H;
 
 zf = ifft(Qzf);
@@ -34,7 +34,18 @@ figure(204); freqz(h_zf)
 title('Freq. Response of Channel and ZF Equalizer')
 
 % pass signal through equalizer
-ZF_Equalizer_Out = filter(1,h,MF_Out);
+ZF_Equalizer_Out = filter(1,h_up,MF_Out);
+
+% % pass signal through equalizer
+% LS = 2^(nextpow2(length(MF_Out))); 
+% S_FFT = fftshift(fft(MF_Out, LS));
+% 
+% ZF_OUT = (S_FFT.*Qzf);
+% ZF_Equalizer_Out = ifft(ZF_OUT);
+
+%% Code Snippet from Rev 1.2
+% pass signal through equalizer
+%ZF_Equalizer_Out = filter(1,h,MF_Out);
 
 % % find frequency response of the channel using fft
 % % Output is centered around 0Hz

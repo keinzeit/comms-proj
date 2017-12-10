@@ -2,7 +2,6 @@ function [SRRCPulse,modStreamSRRC] = ModulatedSRRCPulse(bitStream,alpha,T,K,Am,M
 % Function inputs the bitStream and modulates the bit stream using a Square
 % Root Raised Cosine shaping filter.  The function creates the SRRC pulse
 % and then modulates the bit stream
-K = 
 
 t2 = linspace(-K*T,K*T,2*K*T+1);
 R = log2(PAM_level); % number of bits used to change amplitude of pulse shape
