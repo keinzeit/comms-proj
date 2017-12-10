@@ -1,5 +1,22 @@
 %% Test Code File
 
+%% Testing qmmse function
+delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
+channel_h = [1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
+channel_h0 = [1 1/2 3/4 -2/7];
+N = 2.^(nextpow2(length(HS_ZF_Equalizer_Out)));
+channel_FFT = fft(channel_h,N);
+
+% create MMSE Equalizer w/o noise
+Qmmse0 = qmmse(channel_h0);
+figure; freqz(ifft(Qmmse0))
+title('Frequency Response of the MMSE Equalizer (no noise)')
+
+% create MMSE Equalizer including noise
+Qmmse = qmmse(channel_h0,N,noise);
+figure; freqz(ifft(Qmmse))
+title('Frequency Response of the MMSE Equalizer (with noise=0.05)')
+
 %% Applying MMSE Equalizer
 % FFTs of MF Outputs
 HS_MF_Out_FFT = fftshift(fft(HS_MF_Out,N));

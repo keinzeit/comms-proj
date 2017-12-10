@@ -96,25 +96,26 @@ eyediagram(SRRC_ZF_Equalizer_Out, 32); title('Eye Diagram Output of ZF Equalizer
 %% MMSE Equalizer
 % half-sine pulse
 % take FFT of channel impulse response
-delay = zeros(1, 31);                           %vector of 31 zeros to space between values in h
-channel_h = [1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
-channel_h0 = [1 1/2 3/4 -2/7];
+channel = [1 1/2 3/4 -2/7];
+channel_up = upsample(channel,T);
 N = 2.^(nextpow2(length(HS_ZF_Equalizer_Out)));
 channel_FFT = fft(channel_h,N);
 
 % create MMSE Equalizer w/o noise
-Qmmse = (conj(channel_FFT)./((abs(channel_FFT)).^2)); %+2*noise));
-figure; freqz(ifft(Qmmse))
+Qmmse = qmmse(channel_up,N);
+Qmmse0 = qmmse(channel,N); % used to plot 1 period of the equalizer frequency response
+figure; freqz(ifft(Qmmse0))
 title('Frequency Response of the MMSE Equalizer (no noise)')
 
 % create MMSE Equalizer including noise
-Qmmse = (conj(channel_FFT)./((abs(channel_FFT)).^2+2*noise));
-figure; freqz(ifft(Qmmse))
+Qmmse = qmmse(channel_up,N,noise);
+Qmmse0 = qmmse(channel,N); % used to plot 1 period of the equalizer frequency response
+figure; freqz(ifft(Qmmse0)) 
 title('Frequency Response of the MMSE Equalizer (with noise=0.05)')
 
+% use the equalizer we just created and pass the matched filter output
+% through it
 
-% FFTs of MF Outputs
-HS_MF_Out_FFT = fftshift(fft(HS_MF_Out,N));
 
 
 
