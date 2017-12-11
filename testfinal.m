@@ -19,7 +19,7 @@
 %% Image Pre-processing
 I0 = imread('file.jpeg');                   % Import Image
 I0 = imrotate(I0, 270);                     % Rotate Image
-[Zt,dctZ,I] = ImPreProc(I0);                % Send image for processing
+[Zt,dctZ,I, m, n] = ImPreProc(I0);                % Send image for processing
 
 figure(1); imshow(I); title('Original Image')                       % Show Processed Image        
 figure(2); imshow(dctZ); title('DCT of Image')                    % Show DCT of Image
@@ -126,7 +126,7 @@ eyediagram(MMSE_HS_Out, 32); title('HS Output of MMSE Equalizer')
 eyediagram(MMSE_SRRC_Out, 32); title('SRRC Output of MMSE Equalizer')
 
 
-
+[Received_Image] = Image_Post_Proc(bitStream, M,N, B, maxZ, minZ)
 
 
 
