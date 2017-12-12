@@ -1,4 +1,4 @@
-%% final test
+%% finalproj_102
 % Jon Manninen, Kenny Yau
 
 %%%

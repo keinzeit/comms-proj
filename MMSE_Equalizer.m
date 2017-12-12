@@ -10,12 +10,11 @@ function [MMSE_Out] = MMSE_Equalizer(Qmmse,MF_Out)
 % Transform Matched FIlter Outputs to Frequency Domain
 
 LS = 2^(nextpow2(length(MF_Out))); 
-%LSRRC = 2^(nextpow2(length(MF_Out)));
 S_FFT = fft(MF_Out, LS);
-%SRRC_FFT = fft(MF_Out, LSRRC);
 
 QMMSE_Out = (S_FFT.*Qmmse);
-%QMMSE_SRRC = (SRRC_FFT.*Qmmse);
 
-MMSE_Out = ifft(QMMSE_HS);
-%MMSE_SRRC_Out = ifft(QMMSE_SRRC);
+MMSE_Out = ifft(QMMSE_Out);
+
+
+return

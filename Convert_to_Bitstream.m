@@ -19,5 +19,13 @@ end
  
 bitStream = de2bi(bsd,qBits);               % convert quantized values into q-bit numbers. right MSB; use correct flag for left MS
 
+for i = 1:B
+    bs_temp = reshape(Zq(:,:,i),len,1);     % reshape B MxN dct blocks into a long column vector
+    start = len*(i-1)+1;
+    stop  = len*i;
+    bsd(start:stop) = bs_temp;              % put values into correct location in bs
+end
+
+
 return
 
