@@ -2,25 +2,34 @@ function [Ztres,r,c,m,n,minval,maxval]=ImagePreProcess_gray(filename,qbits)
 
 % read the image
 X = imread(filename);
-
-% crop the image to a size divisible by 8 and isn't too big
 X = rgb2gray(X);
 X = imrotate(X,270);
+
+% crop the image to a size divisible by 8 and isn't too big
 [m, n] = size(X);
 
-N = 7;
-while m > 2^N 
-    m = m/2;
+while m*n > 1000000
+    X = imresize(X,0.5);
+    [m, n] = size(X);
 end
-
-while n > 2^N
-    n = n/2;
-end
+% N = 7;
+% while m > 2^N 
+%     m = m/2;
+% end
+% 
+% while n > 2^N
+%     n = n/2;
+% end
+% 
+% m = m - mod(m,8);
+% n = n - mod(n,8);
+% 
+% X = X((1:m)+1000,(1:n)+1000);
 
 m = m - mod(m,8);
 n = n - mod(n,8);
 
-X = X((1:m)+1000,(1:n)+1000);
+X = X((1:m),(1:n));
 
 % convert the image to double
 Z = im2double(X);
