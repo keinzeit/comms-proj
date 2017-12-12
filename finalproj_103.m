@@ -29,7 +29,13 @@ qBits = 16;
 [bitStream,M,N,B] = Convert_to_Bitstream(qBits, Zq);
 
 T = 32;        % Number of samples per bit duration
-PAM_level = 2; % PAM levels
+% PAM_level = 2; % PAM levels
+% spb = 32;      % Samples per bit
+% %% Modulation 
+% % Modulate Bit Stream using Half Sine Pulses
+% t1 = linspace(0,spb,spb+1);                 % Pulses include the first value of the next pulse
+% HSPulse = sin(pi*t1/spb);
+% HS_mod = pamModulate(bs2,HSPulse,spb);
 
 [modStreamHS,HS_Pulse,Am] = ModulatedSinePulse(bitStream, T, qBits, PAM_level, M, N, B);
 

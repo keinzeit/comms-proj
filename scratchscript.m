@@ -1,5 +1,13 @@
 %% Scratch Script
 
+%% Test Sampling and Detection, Reconstruction
+% Conversion to Image
+newZq3 = bitstream2blocks(HS_decidedSignal,qbits,R2,C2);
+% Image Post-processing
+newZ3 = ImagePostProcess_gray(newZq3,8,8,1,1,minZ,maxZ);
+figure
+imshow(newZ3)
+
 %% Test stream2array,bi2de,reshape,and ImagePostP
 HS_bitArray = stream2array(HS_decidedSignal,16);
 HS_Zq = bi2de(HS_bitArray);

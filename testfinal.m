@@ -60,8 +60,9 @@ figure(10); plot(modStreamSRRC((1:10*T)+100*T)); title('Modulated SRRC Pulse')
 % eye diagrams for the output of the modulator
 % picking a portion of the signal will clean up the eye diagram
 % consider picking the vector from 2^N1+1:2^N2 (ex. 1025:65536)
-eyediagram(modStreamHS,T ,1,16); title('Eye Diagram of Modulated Signal - Half-Sine Pulse')
-eyediagram(modStreamSRRC,T,1); title('Eye Diagram of Modulated Signal - SRRC Pulse')
+tEye = (2^10+1):2^14;
+eyediagram(modStreamHS(tEye),T ,1,16); title('Eye Diagram of Modulated Signal - Half-Sine Pulse')
+eyediagram(modStreamSRRC(tEye),T,1); title('Eye Diagram of Modulated Signal - SRRC Pulse')
 
 %% Channel Effects
 noise = 0.05; % noise to be added after channel (power?)
@@ -69,19 +70,19 @@ noise = 0.05; % noise to be added after channel (power?)
 [SRRC_Channel_out,HS_Channel_out,Noisy_HS,Noisy_SRRC] = channel(modStreamSRRC, modStreamHS, noise);
 
 % eye diagrams of Modulated signals at the output of the Channel
-eyediagram(SRRC_Channel_out, 32);title('Eye Diagram of SRRC Signal after Channel')
-eyediagram(HS_Channel_out, 32, 1, 16); title('Eye Diagram of HS Signal after Channel')
+eyediagram(SRRC_Channel_out(tEye), 32);title('Eye Diagram of SRRC Signal after Channel')
+eyediagram(HS_Channel_out(tEye), 32, 1, 16); title('Eye Diagram of HS Signal after Channel')
 
 % eye diagrams of Modulated signals with noise out of the Channel
-eyediagram(Noisy_HS, 32, 1, 16); title('Eye Diagram of Noisey HS Signal')
-eyediagram(Noisy_SRRC, 32); title('Eye Diagram of Noisey SRRC Signal')
+eyediagram(Noisy_HS(tEye), 32, 1, 16); title('Eye Diagram of Noisey HS Signal')
+eyediagram(Noisy_SRRC(tEye), 32); title('Eye Diagram of Noisey SRRC Signal')
 
 %% Matched Filter
 % Pass Noisy Signals through the Matched Filter
 [HS_MF_Out,SRRC_MF_Out] = Matched_Filter(Noisy_HS, Noisy_SRRC, SRRC_Pulse, T);
 
-eyediagram(HS_MF_Out, 32); title('Eye Diagram of HS Signal after Matched Filter')
-eyediagram(SRRC_MF_Out, 32); title('Eye Diagram of SRRC Signal after Matched Filter')
+eyediagram(HS_MF_Out(tEye), 32); title('Eye Diagram of HS Signal after Matched Filter')
+eyediagram(SRRC_MF_Out(tEye), 32); title('Eye Diagram of SRRC Signal after Matched Filter')
 
 %% ZF Equalizer
 % Pass Signal Output from the Matched Filter through the Zero-Forcing
@@ -92,8 +93,8 @@ eyediagram(SRRC_MF_Out, 32); title('Eye Diagram of SRRC Signal after Matched Fil
 [HS_ZF_Equalizer_Out] = ZF_equalizer(HS_MF_Out);
 [SRRC_ZF_Equalizer_Out] = ZF_equalizer(SRRC_MF_Out);
 
-eyediagram(HS_ZF_Equalizer_Out, 32); title('Eye Diagram Output of ZF Equalizer HS')
-eyediagram(SRRC_ZF_Equalizer_Out, 32); title('Eye Diagram Output of ZF Equalizer SRRC')
+eyediagram(HS_ZF_Equalizer_Out(tEye), 32); title('Eye Diagram Output of ZF Equalizer HS')
+eyediagram(SRRC_ZF_Equalizer_Out(tEye), 32); title('Eye Diagram Output of ZF Equalizer SRRC')
 
 %% MMSE Equalizer
 
@@ -116,8 +117,8 @@ SRRC_MMSE_Out = MMSE_Equalizer(Qmmse, SRRC_MF_Out);
 
 
 %Eye diagrams of SRRC and HS from the MMSE Equalizer
-eyediagram(HS_MMSE_Out, 32); title('HS Output of MMSE Equalizer')
-eyediagram(SRRC_MMSE_Out, 32); title('SRRC Output of MMSE Equalizer')
+eyediagram(HS_MMSE_Out(tEye), 32); title('HS Output of MMSE Equalizer')
+eyediagram(SRRC_MMSE_Out(tEye), 32); title('SRRC Output of MMSE Equalizer')
 
 %% MMSE Equalizer (with noise)
 
@@ -134,8 +135,8 @@ SRRC_MMSE_Out = MMSE_Equalizer(Qmmse, SRRC_MF_Out);
 
 
 %Eye diagrams of SRRC and HS from the MMSE Equalizer
-eyediagram(HS_MMSE_Out, 32); title('HS Output of MMSE Equalizer (with noise)')
-eyediagram(SRRC_MMSE_Out, 32); title('SRRC Output of MMSE Equalizer (with noise)')
+eyediagram(HS_MMSE_Out(tEye), 32); title('HS Output of MMSE Equalizer (with noise)')
+eyediagram(SRRC_MMSE_Out(tEye), 32); title('SRRC Output of MMSE Equalizer (with noise)')
 
 
 %% Sampling and Detection - ZF Equalizer
