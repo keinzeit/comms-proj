@@ -144,7 +144,7 @@ eyediagram(HS_MMSE_Out(tEye), 32); title('HS Output of MMSE Equalizer (with nois
 eyediagram(SRRC_MMSE_Out(tEye), 32); title('SRRC Output of MMSE Equalizer (with noise)')
 
 
-%% Sampling and Detection - ZF Equalizer
+%% Sampling and Detection - HS ZF Equalizer 
  
 numBits; % this was found from way earlier
 HS_sampledSignal = zeros(1,numBits);
@@ -162,118 +162,85 @@ HS_decidedSignal(HS_sampledSignal>0) = 1;
 HS_decidedSignal(HS_sampledSignal<=0) = 0;
 
 % Conversion to Image
-newZq = bitstream2blocks(HS_decidedSignal,qBits,R,C);
+newZq_HS_ZF = bitstream2blocks(HS_decidedSignal,qBits,R,C);
 % Image Post-processing
-newZ = ImagePostProcess_gray(newZq,blockrow,blockcol,imrow,imcol,minZ,maxZ);
+newZ_HS_ZF = ImagePostProcess_gray(newZq_SRRC_ZF,blockrow,blockcol,imrow,imcol,minZ,maxZ);
 figure
-imshow(newZ)
+imshow(newZ_HS_ZF)
 title('Recovered Image for Half-Sine ZF Equalizer (no noise)')
 
-%% Old Sample & Detect Code
+%% Sampling and Detection - SRRC ZF Equalizer
+ 
+numBits; % this was found from way earlier
+SRRC_ZF_sampledSignal = zeros(1,numBits);
+currBit = 1;
 
-% numBits = 64*16; % hardcoded for now to sample the number of bits in our bitStream
-% HS_sampledSignal = zeros(1,numBits);
-% currBit = 1;
-% 
-% % compare output signal with bitStream signal
-% bs = zeros(1,1024);
-% for i = 1:64
-%     bs_temp = bitStream(i,:);
-%     start = 16*(i-1)+1;
-%     stop  = 16*i;
-%     bs(start:stop) = bs_temp;
-% end
-% 
-% % HS
-% % sample
-% while (currBit<=numBits)
-%    HS_sampledSignal(currBit) = HS_ZF_Equalizer_Out(currBit*T);
-%    currBit = currBit + 1;
-% end
-% 
-% % decision
-% HS_decidedSignal(HS_sampledSignal>0) = 1;
-% HS_decidedSignal(HS_sampledSignal<=0) = 0;
-% 
-% HS_dif = HS_decidedSignal - bs;
-% 
-% figure
-% plot(HS_dif)
-% title('Dif Original BS and Detected BS - HS\_ZF')
-% 
-% % SRRC
-% % sample
-% SRRC_sampledSignal = zeros(1,numBits);
-% currBit = 1;
-% i = 0;
-% 
-% while (currBit<=numBits)
-%    SRRC_sampledSignal(currBit) = SRRC_ZF_Equalizer_Out(currBit*T+224);
-%    currBit = currBit + 1;
-% end
-% 
-% % decision
-% SRRC_decidedSignal(SRRC_sampledSignal>0) = 1;
-% SRRC_decidedSignal(SRRC_sampledSignal<=0) = 0;
-% 
-% % compare output signal with bitStream signal
-% SRRC_dif = SRRC_decidedSignal - bs;
-% 
-% figure
-% plot(SRRC_dif)
-% title('Dif Original BS and Detected BS - SRRC\_ZF')
-% 
+% SRRC
+% sample
+while (currBit<=numBits)
+   SRRC_ZF_sampledSignal(currBit) = SRRC_ZF_Equalizer_Out(currBit*T+224);
+   currBit = currBit + 1;
+end
 
-%% Sampling and Detection - MMSE Equalizer
-% 
-% numBits = 64*16; % hardcoded for now to sample the number of bits in our bitStream
-% HS_sampledSignal = zeros(1,numBits);
-% currBit = 1;
-% 
-% % compare output signal with bitStream signal
-% bs = zeros(1,1024);
-% for i = 1:64
-%     bs_temp = bitStream(i,:);
-%     start = 16*(i-1)+1;
-%     stop  = 16*i;
-%     bs(start:stop) = bs_temp;
-% end
-% 
-% % HS
-% % sample
-% while (currBit<=numBits)
-%    HS_sampledSignal(currBit) = HS_MMSE_Out(currBit*T);
-%    currBit = currBit + 1;
-% end
-% 
-% % decision
-% HS_decidedSignal(HS_sampledSignal>0) = 1;
-% HS_decidedSignal(HS_sampledSignal<=0) = 0;
-% 
-% HS_dif = HS_decidedSignal - bs;
-% 
-% figure
-% plot(HS_dif)
-% title('Dif Original BS and Detected BS - HS\_MMSE')
-% 
-% % SRRC
-% % sample
-% SRRC_sampledSignal = zeros(1,numBits);
-% currBit = 1;
-% i = 0;
-% 
-% while (currBit<=numBits)
-%    SRRC_sampledSignal(currBit) = SRRC_MMSE_Out(currBit*T+224);
-%    currBit = currBit + 1;
-% end
-% 
-% % decision
-% SRRC_decidedSignal(SRRC_sampledSignal>0) = 1;
-% SRRC_decidedSignal(SRRC_sampledSignal<=0) = 0;
-% 
-% % compare output signal with bitStream signal
-% SRRC_dif = SRRC_decidedSignal - bs;
-% 
-% figure
-% plot(SRRC_dif)
-% title('Dif Original BS and Detected BS - SRRC\_MMSE')
+% decision
+SRRC_ZF_decidedSignal(SRRC_ZF_sampledSignal>0) = 1;
+SRRC_ZF_decidedSignal(SRRC_ZF_sampledSignal<=0) = 0;
+
+% Conversion to Image
+newZq_SRRC_ZF = bitstream2blocks(SRRC_ZF_decidedSignal,qBits,R,C);
+% Image Post-processing
+newZ_SRRC_ZF = ImagePostProcess_gray(newZq_SRRC_ZF,blockrow,blockcol,imrow,imcol,minZ,maxZ);
+figure
+imshow(newZ_SRRC_ZF)
+title('Recovered Image for SRRC ZF Equalizer (no noise)')
+
+
+%% Sampling and Detection - HS MMSE Equalizer 
+ 
+numBits; % this was found from way earlier
+HS_MMSE_sampledSignal = zeros(1,numBits);
+currBit = 1;
+
+% HS
+% sample
+while (currBit<=numBits)
+   HS_MMSE_sampledSignal(currBit) = HS_MMSE_Out(currBit*T);
+   currBit = currBit + 1;
+end
+
+% decision
+HS_MMSE_decidedSignal(HS_MMSE_sampledSignal>0) = 1;
+HS_MMSE_decidedSignal(HS_MMSE_sampledSignal<=0) = 0;
+
+% Conversion to Image
+newZq_HS_MMSE = bitstream2blocks(HS_MMSE_decidedSignal,qBits,R,C);
+% Image Post-processing
+newZ_HS_MMSE = ImagePostProcess_gray(newZq_HS_MMSE,blockrow,blockcol,imrow,imcol,minZ,maxZ);
+figure
+imshow(newZ_HS_MMSE)
+title('Recovered Image for Half-Sine MMSE Equalizer (no noise)')
+
+%% Sampling and Detection - SRRC MMSE Equalizer 
+ 
+numBits; % this was found from way earlier
+SRRC_MMSE_sampledSignal = zeros(1,numBits);
+currBit = 1;
+
+% SRRC
+% sample
+while (currBit<=numBits)
+   SRRC_MMSE_sampledSignal(currBit) = SRRC_MMSE_Out(currBit*T+224);
+   currBit = currBit + 1;
+end
+
+% decision
+SRRC_MMSE_decidedSignal(SRRC_MMSE_sampledSignal>0) = 1;
+SRRC_MMSE_decidedSignal(SRRC_MMSE_sampledSignal<=0) = 0;
+
+% Conversion to Image
+newZq_SRRC_MMSE = bitstream2blocks(SRRC_MMSE_decidedSignal,qBits,R,C);
+% Image Post-processing
+newZ_SRRC_MMSE = ImagePostProcess_gray(newZq_SRRC_MMSE,blockrow,blockcol,imrow,imcol,minZ,maxZ);
+figure
+imshow(newZ_SRRC_MMSE)
+title('Recovered Image for SRRC MMSE Equalizer (no noise)')
