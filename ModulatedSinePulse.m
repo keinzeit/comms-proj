@@ -34,7 +34,6 @@ for i = 1:M*N*B*qBits
     start = (i-1)*T+1;
     stop  = i*T+1;
     modStreamHS(start:stop) = Am(j,k)*sPulse; %consider removing modStreamHS for half-sine pulse
-    
 end
 
 
