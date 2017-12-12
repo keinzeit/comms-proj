@@ -8,7 +8,7 @@ X = rgb2gray(X);
 X = imrotate(X,270);
 [m, n] = size(X);
 
-N = 9;
+N = 7;
 while m > 2^N 
     m = m/2;
 end
@@ -20,7 +20,7 @@ end
 m = m - mod(m,8);
 n = n - mod(n,8);
 
-X = X((1:m),(1:n));
+X = X((1:m)+1000,(1:n)+1000);
 
 % convert the image to double
 Z = im2double(X);
