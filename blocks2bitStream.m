@@ -16,7 +16,7 @@ for i = 1:N
     stop  = len*i;
     bsd(start:stop) = bs_temp;              % put values into correct location in bs
 end
- 
+
 bitArray = de2bi(bsd,qBits);               % convert quantized values into q-bit numbers. right MSB; use correct flag for left MS
 
 bitStream = array2stream(bitArray);

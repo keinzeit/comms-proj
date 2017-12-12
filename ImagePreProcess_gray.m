@@ -8,7 +8,7 @@ X = rgb2gray(X);
 X = imrotate(X,270);
 [m, n] = size(X);
 
-N = 10;
+N = 9;
 while m > 2^N 
     m = m/2;
 end
@@ -25,9 +25,9 @@ X = X((1:m),(1:n));
 % convert the image to double
 Z = im2double(X);
 
-% % This command will show all 3 layers of the colored image. 
-% figure;
-% imshow(Z);
+% This command will show all 3 layers of the colored image. 
+figure;
+imshow(Z);
 
 %% take DCT in 8x8 blocks and quantize it into 8-bit or 16-bit numbers
 fun = @dct2;

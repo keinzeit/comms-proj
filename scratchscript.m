@@ -1,5 +1,11 @@
 %% Scratch Script
 
+%% Test stream2array,bi2de,reshape,and ImagePostP
+HS_bitArray = stream2array(HS_decidedSignal,16);
+HS_Zq = bi2de(HS_bitArray);
+HS_Zq3D = reshape(HS_Zq,[8,8,1]);
+ImagePostProcess_gray(HS_Zq3D,1,1,8,8,minZ,maxZ)
+
 %% Test ImagePre,Bitstream conversion, Image Reconstruction
 % This sections leaves out all the modulation, channel, matched filter,
 % equalization, and sampling and detection portions. It only tests to see
