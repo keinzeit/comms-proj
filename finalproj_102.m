@@ -17,16 +17,13 @@
 %     - Image post-processing
 
 %% Image Pre-processing
-I0 = imread('file.jpeg');                   % Import Image
-I0 = imrotate(I0, 270);                     % Rotate Image
-[Zt,dctZ,I,minZ,maxZ] = ImPreProc(I0);                % Send image for processing
+qbits = 16;
+[Zq,blockrow,blockcol,imrow,imcol,minZ,maxZ] = ImagePreProcess_gray('file.jpeg',qbits);
 
 % figure(11); imshow(I); title('Original Image')                       % Show Processed Image        
 % figure(12); imshow(dctZ); title('DCT of Image')                    % Show DCT of Image
 
 %% Conversion to Bit Stream
-qBits = 16;                                 % Quantization bits
-Zq = quantizer(qBits,Zt);                   % Send DCT image to be quantized
 
 % Create Bit Stream out of Quantized Data
 [bitStream,M,N,B] = Convert_to_Bitstream(qBits, Zq);
