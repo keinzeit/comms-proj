@@ -21,9 +21,9 @@ I = imresize(I, 0.5);                   % Resize image
 Z = rgb2gray(I);                        % Convert to grayscale
 Z = im2double(Z);                       % Convert image to type double
 
-% figure(2)
-% imshow(Z)                               %display the grayscaled cropped/scaled image
-% title('Cropped Image')
+figure(2)
+imshow(Z)                               %display the grayscaled cropped/scaled image
+title('Cropped Image')
 
 m = size(Z,1);                          % Get number of rows
 n = size(Z,2);                          % number of columns

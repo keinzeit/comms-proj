@@ -1,4 +1,4 @@
-function [bitStream,R,C,N] = Convert_to_Bitstream(qBits,Zq)
+function [bitStream,R,C,N] = blocks2bitStream(qBits,Zq)
 % Function takes the 3d array of quantized matrices and converts them into a
 % binary single stream of bits.  The row length of this bit stream is
 % dependent on the number of quantization levels chosen
@@ -17,7 +17,14 @@ for i = 1:N
     bsd(start:stop) = bs_temp;              % put values into correct location in bs
 end
  
-bitStream = de2bi(bsd,qBits);               % convert quantized values into q-bit numbers. right MSB; use correct flag for left MS
+bitArray = de2bi(bsd,qBits);               % convert quantized values into q-bit numbers. right MSB; use correct flag for left MS
+
+bitStream = array2stream(bitArray);
+
+% % used to test my Rx side code
+% RxBitArray = stream2array(bitStream,qBits);
+% diffArray = bitArray - RxBitArray;
+% sum(sum(abs(diffArray))) % 0 means received array is in same order as original
 
 return
 

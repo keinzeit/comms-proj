@@ -5,7 +5,7 @@
 % This project is a simulation of the model of communication systems for
 % images, such as that used for digital HDTV. It consists of a number of
 % parts:
-%     - Image pre-processing
+%     - Image pre-processing (ImagePreProcess_gray.m)
 %     - Conversion to bit-stream
 %     - Modulation
 %     - Channel Effects

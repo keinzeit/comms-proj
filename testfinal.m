@@ -58,6 +58,8 @@ figure(9); plot(modStreamHS((1:10*T)+100*T)); title('Modulated Half-Sine Pulse')
 figure(10); plot(modStreamSRRC((1:10*T)+100*T)); title('Modulated SRRC Pulse')
 
 % eye diagrams for the output of the modulator
+% picking a portion of the signal will clean up the eye diagram
+% consider picking the vector from 2^N1+1:2^N2 (ex. 1025:65536)
 eyediagram(modStreamHS,T ,1,16); title('Eye Diagram of Modulated Signal - Half-Sine Pulse')
 eyediagram(modStreamSRRC,T,1); title('Eye Diagram of Modulated Signal - SRRC Pulse')
 
