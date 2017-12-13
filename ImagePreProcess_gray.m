@@ -3,12 +3,12 @@ function [Ztres,r,c,m,n,minval,maxval]=ImagePreProcess_gray(filename,qbits)
 % read the image
 X = imread(filename);
 X = rgb2gray(X);
-X = imrotate(X,270);
+% X = imrotate(X,270);
 
 % crop the image to a size divisible by 8 and isn't too big
 [m, n] = size(X);
 
-while m*n > 50000
+while m*n > 150000
     X = imresize(X,0.5);
     [m, n] = size(X);
 end
