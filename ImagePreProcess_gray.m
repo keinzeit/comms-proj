@@ -8,7 +8,7 @@ X = imrotate(X,270);
 % crop the image to a size divisible by 8 and isn't too big
 [m, n] = size(X);
 
-while m*n > 1000000
+while m*n > 50000
     X = imresize(X,0.5);
     [m, n] = size(X);
 end

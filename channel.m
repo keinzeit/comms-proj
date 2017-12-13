@@ -11,9 +11,9 @@ delay = zeros(1, 31);                           %vector of 31 zeros to space bet
 h = [1 delay 1/2 delay 3/4 delay -2/7];         % channel filter FIR
 h0 = [1 1/2 3/4 -2/7];
 
-%Plot Impulse and Frequency Response of Channel
-figure; freqz(h0); title('Frequency Response of the Channel')                                       
-figure; stem(h); title('Impulse Response of Channel')   
+% %Plot Impulse and Frequency Response of Channel
+% figure; freqz(h0); title('Frequency Response of the Channel')                                       
+% figure; stem(h); title('Impulse Response of Channel')   
 
 %Create Outputs by Convolving Signals with the Channel
 HS_Channel_out = conv(modBsSP, h);                           

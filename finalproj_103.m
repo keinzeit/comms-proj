@@ -1,4 +1,4 @@
-%% finalproj_102
+%% EE107 Final Project
 % Jon Manninen, Kenny Yau
 
 %%%
@@ -31,13 +31,10 @@ qBits = 16;
 numBits = length(bitstream);
 
 
-% Create Bit Stream out of Quantized Data
-% [bitStream,M,N,B] = Convert_to_Bitstream(qBits, Zq);
-
-T = 32;        % Number of samples per bit duration
+%% Modulation 
 PAM_level = 2; % PAM levels
 spb = 32;      % Samples per bit
-%% Modulation 
+
 % Modulate Bit Stream using Half Sine Pulses
 t1 = linspace(0,spb,spb+1);                 % Pulses include the first value of the next pulse
 HS_Pulse = sin(pi*t1/spb);
@@ -47,16 +44,8 @@ modStreamHS = pamModulate(bitstream,HS_Pulse,spb);
 alpha = 0.5;
 K = 4;
 SRRC_Pulse = srrcPulse(alpha,spb,K);
+SRRC_Pulse = normalizePulse(SRRC_Pulse,HS_Pulse);
 modStreamSRRC = pamModulate(bitstream,SRRC_Pulse,spb);
-
-% [modStreamHS,HS_Pulse,Am] = ModulatedSinePulse(bitStream, T, qBits, PAM_level, M, N, B);
-% 
-% % Modulate Bit Stream using SRRC Pulses
-% alpha = 0.5;                                % Roll-Off Factor
-% K = 4;                                      % # of bit durations each side of the SRRC Pulse should last
-% [SRRC_Pulse,modStreamSRRC] = ModulatedSRRCPulse(bitStream,alpha,T,K,Am,M,N,B,qBits,PAM_level);
-
-
 
 % pulse time and frequency plots
 figure(3); plot(HS_Pulse); title('Half-Sine Pulse');
@@ -72,7 +61,7 @@ figure(8); freqz(modStreamSRRC); title('Frequency Response of Modulated Signal -
 figure(9); plot(modStreamHS((1:10*T)+100*T)); title('Modulated Half-Sine Pulse')
 figure(10); plot(modStreamSRRC((1:10*T)+100*T)); title('Modulated SRRC Pulse')
 
-tEye = (2^10+1):2^14;
+tEye = (2^10+1):2^14; % portion of signal we use to draw eye diagram
 % eye diagrams for the output of the modulator
 eyediagram(modStreamHS(tEye),T ,1,16); title('Eye Diagram of Modulated Signal - Half-Sine Pulse')
 eyediagram(modStreamSRRC(tEye),T,1); title('Eye Diagram of Modulated Signal - SRRC Pulse')
@@ -175,7 +164,8 @@ newZq_HS_ZF = bitstream2blocks(HS_ZF_decidedSignal,qBits,R,C);
 newZ_HS_ZF = ImagePostProcess_gray(newZq_HS_ZF,blockrow,blockcol,imrow,imcol,minZ,maxZ);
 figure
 imshow(newZ_HS_ZF)
-title('Recovered Image for Half-Sine ZF Equalizer (no noise)')
+text = sprintf('Recovered Image for Half-Sine ZF Equalizer (noise = %1.2f)',noise);
+title(text)
 
 %% Sampling and Detection - SRRC ZF Equalizer
  
@@ -201,8 +191,8 @@ newZq_SRRC_ZF = bitstream2blocks(SRRC_ZF_decidedSignal,qBits,R,C);
 newZ_SRRC_ZF = ImagePostProcess_gray(newZq_SRRC_ZF,blockrow,blockcol,imrow,imcol,minZ,maxZ);
 figure
 imshow(newZ_SRRC_ZF)
-title('Recovered Image for SRRC ZF Equalizer (no noise)')
-
+text = sprintf('Recovered Image for SRRC ZF Equalizer (noise = %1.2f)',noise);
+title(text)
 
 %% Sampling and Detection - HS MMSE Equalizer 
  
@@ -228,7 +218,8 @@ newZq_HS_MMSE = bitstream2blocks(HS_MMSE_decidedSignal,qBits,R,C);
 newZ_HS_MMSE = ImagePostProcess_gray(newZq_HS_MMSE,blockrow,blockcol,imrow,imcol,minZ,maxZ);
 figure
 imshow(newZ_HS_MMSE)
-title('Recovered Image for Half-Sine MMSE Equalizer (no noise)')
+text = sprintf('Recovered Image for Half-Sine MMSE Equalizer (noise = %1.2f)',noise);
+title(text)
 
 %% Sampling and Detection - SRRC MMSE Equalizer 
  
@@ -254,4 +245,5 @@ newZq_SRRC_MMSE = bitstream2blocks(SRRC_MMSE_decidedSignal,qBits,R,C);
 newZ_SRRC_MMSE = ImagePostProcess_gray(newZq_SRRC_MMSE,blockrow,blockcol,imrow,imcol,minZ,maxZ);
 figure
 imshow(newZ_SRRC_MMSE)
-title('Recovered Image for SRRC MMSE Equalizer (no noise)')
+text = sprintf('Recovered Image for SRRC MMSE Equalizer (noise = %1.2f)',noise);
+title(text)

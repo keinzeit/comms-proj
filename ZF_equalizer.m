@@ -22,16 +22,16 @@ Qzf = 1./H;
 
 zf = ifft(Qzf);
 
-figure(25), plot(zf)
-title('Impulse Response of ZF Equalizer')
-figure(26), freqz(zf)
-title('Frequency Response of ZF Equalizer')
+% figure(25), plot(zf)
+% title('Impulse Response of ZF Equalizer')
+% figure(26), freqz(zf)
+% title('Frequency Response of ZF Equalizer')
 
-% check if equalizer really worked
-H_Qzf = H.*Qzf;
-h_zf = ifft(H_Qzf);
-figure(204); freqz(h_zf)
-title('Freq. Response of Channel and ZF Equalizer')
+% % check if equalizer really worked
+% H_Qzf = H.*Qzf;
+% h_zf = ifft(H_Qzf);
+% figure(204); freqz(h_zf)
+% title('Freq. Response of Channel and ZF Equalizer')
 
 % pass signal through equalizer
 ZF_Equalizer_Out = filter(1,h_up,MF_Out);
